@@ -1,0 +1,593 @@
+openapi: 3.0.0
+info:
+  title: SEP6-movies backend
+  description: "Backend part of the project delivered for SEP6 course - Movies platform\n\
+    \nAuthors of project: \nKonrad Piotrowski (280053)\nAleksander Stefan Bialik (280027)"
+  version: "1.0"
+servers:
+- url: https://virtserver.swaggerhub.com/k0k0piotrowski/SEP6-Backend/1.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /user/register:
+    post:
+      tags:
+      - User
+      summary: Registering the user
+      requestBody:
+        $ref: '#/components/requestBodies/Register'
+      responses:
+        "200":
+          description: Succesful operation
+        "500":
+          description: Internal server error
+  /user/login:
+    post:
+      tags:
+      - User
+      summary: Logging in the user
+      requestBody:
+        $ref: '#/components/requestBodies/Login'
+      responses:
+        "200":
+          description: Succesful operation
+        "500":
+          description: Internal server error
+  /user/playlist/addToFavourite:
+    post:
+      tags:
+      - User
+      - Playlist
+      summary: Adding a movie to favourite list of user
+      description: Add specific movie to the user's list of favourite movies.
+      requestBody:
+        $ref: '#/components/requestBodies/FavouriteMovie'
+      responses:
+        "200":
+          description: Succesful operation
+        "401":
+          description: Not authenticated
+        "403":
+          description: Access token does not have the required scope
+        "500":
+          description: Internal server error
+      security:
+      - BearerAuth: []
+  /user/playlist/removeFromFavourite/{movieId}:
+    delete:
+      tags:
+      - User
+      - Playlist
+      summary: Removing movie from favourite list
+      description: Removing a movie from list of favourite movies for the specific
+        user.
+      parameters:
+      - name: movieId
+        in: path
+        description: Numeric ID of the movie to remove from favourite list
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+        "401":
+          description: Not authenticated
+        "403":
+          description: Access token does not have the required scope
+        "500":
+          description: Internal server error
+      security:
+      - BearerAuth: []
+  /user/playlist/getFavourite:
+    get:
+      tags:
+      - User
+      - Playlist
+      summary: Get favorite movies list of user
+      description: Returns a whole list of favourite movies for specific user logged
+        in.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+        "401":
+          description: Not authenticated
+        "403":
+          description: Access token does not have the required scope
+      security:
+      - BearerAuth: []
+  /movie:
+    get:
+      tags:
+      - Movie
+      summary: Search movies
+      description: Returns movies by searched keyword
+      parameters:
+      - name: search
+        in: query
+        description: The search input
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page number
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnMovies'
+        "500":
+          description: Internal server error
+  /movie/top:
+    get:
+      tags:
+      - Movie
+      summary: Get top movies
+      description: Returns list of top rated movies
+      parameters:
+      - name: page
+        in: query
+        description: The page number
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnMovies'
+        "500":
+          description: Internal server error
+  /movie/{movieId}:
+    get:
+      tags:
+      - Movie
+      summary: Get movie by id
+      description: "Returns movie object (json) that will contain movie title, actors"
+      parameters:
+      - name: movieId
+        in: path
+        description: Numeric ID of the movie to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        "500":
+          description: Internal server error
+  /movie/popular:
+    get:
+      tags:
+      - Movie
+      summary: Get popular movies
+      description: Returns list of movies considered popular by The Movie DB Api
+      parameters:
+      - name: page
+        in: query
+        description: The page number
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+        "500":
+          description: Internal server error
+  /person:
+    get:
+      tags:
+      - Person
+      summary: Search people
+      description: Returns people by searched keyword
+      parameters:
+      - name: search
+        in: query
+        description: The search input
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page number
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnPeople'
+        "500":
+          description: Internal server error
+  /person/popular:
+    get:
+      tags:
+      - Person
+      summary: Get popular people
+      description: Returns list of people considered popular by The Movie DB Api
+      parameters:
+      - name: page
+        in: query
+        description: The page number
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnPeople'
+        "500":
+          description: Internal server error
+  /person/{personId}:
+    get:
+      tags:
+      - Person
+      summary: Get person
+      description: Returns person object by given id
+      parameters:
+      - name: personId
+        in: path
+        description: Numeric ID of the actor to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    Register:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Director:
+      type: object
+      properties:
+        movie_id:
+          type: integer
+          format: int64
+        person:
+          $ref: '#/components/schemas/Person'
+    Directors:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Director'
+    Person:
+      type: object
+      properties:
+        name:
+          type: string
+          format: text
+        place_of_birth:
+          type: string
+        date_of_birth:
+          type: string
+          format: date(numeric)
+        date_of_death:
+          type: string
+          format: date(numeric)
+        biography:
+          type: string
+        photo:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        department:
+          type: string
+        movies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+      example:
+        place_of_birth: place_of_birth
+        movies:
+        - null
+        - null
+        date_of_death: date_of_death
+        gender: 6
+        date_of_birth: date_of_birth
+        name: name
+        photo: photo
+        biography: biography
+        department: department
+    People:
+      type: array
+      items:
+        $ref: '#/components/schemas/Person'
+    Rating:
+      type: object
+      properties:
+        movie_id:
+          type: integer
+          format: int64
+        rating:
+          type: object
+          format: double
+        votes:
+          type: integer
+          format: int64
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        poster_path:
+          type: string
+        title:
+          type: string
+        cast:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        vote_average:
+          type: number
+        vote_count:
+          type: integer
+        similar_movies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+      example:
+        cast:
+        - place_of_birth: place_of_birth
+          movies:
+          - null
+          - null
+          date_of_death: date_of_death
+          gender: 6
+          date_of_birth: date_of_birth
+          name: name
+          photo: photo
+          biography: biography
+          department: department
+        - place_of_birth: place_of_birth
+          movies:
+          - null
+          - null
+          date_of_death: date_of_death
+          gender: 6
+          date_of_birth: date_of_birth
+          name: name
+          photo: photo
+          biography: biography
+          department: department
+        similar_movies:
+        - null
+        - null
+        vote_average: 1.46581298050294517310021547018550336360931396484375
+        id: 0
+        title: title
+        vote_count: 5
+        poster_path: poster_path
+    Movies:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Movie'
+      x-schema-name: Movies
+    ReturnMovies:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int64
+        total_pages:
+          type: integer
+          format: int64
+        total_results:
+          type: integer
+          format: int64
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+      example:
+        page: 0
+        total_pages: 6
+        people:
+        - cast:
+          - place_of_birth: place_of_birth
+            movies:
+            - null
+            - null
+            date_of_death: date_of_death
+            gender: 6
+            date_of_birth: date_of_birth
+            name: name
+            photo: photo
+            biography: biography
+            department: department
+          - place_of_birth: place_of_birth
+            movies:
+            - null
+            - null
+            date_of_death: date_of_death
+            gender: 6
+            date_of_birth: date_of_birth
+            name: name
+            photo: photo
+            biography: biography
+            department: department
+          similar_movies:
+          - null
+          - null
+          vote_average: 1.46581298050294517310021547018550336360931396484375
+          id: 0
+          title: title
+          vote_count: 5
+          poster_path: poster_path
+        - cast:
+          - place_of_birth: place_of_birth
+            movies:
+            - null
+            - null
+            date_of_death: date_of_death
+            gender: 6
+            date_of_birth: date_of_birth
+            name: name
+            photo: photo
+            biography: biography
+            department: department
+          - place_of_birth: place_of_birth
+            movies:
+            - null
+            - null
+            date_of_death: date_of_death
+            gender: 6
+            date_of_birth: date_of_birth
+            name: name
+            photo: photo
+            biography: biography
+            department: department
+          similar_movies:
+          - null
+          - null
+          vote_average: 1.46581298050294517310021547018550336360931396484375
+          id: 0
+          title: title
+          vote_count: 5
+          poster_path: poster_path
+        total_results: 1
+    ReturnPeople:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int64
+        total_pages:
+          type: integer
+          format: int64
+        total_results:
+          type: integer
+          format: int64
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+      example:
+        page: 0
+        total_pages: 6
+        people:
+        - place_of_birth: place_of_birth
+          movies:
+          - null
+          - null
+          date_of_death: date_of_death
+          gender: 6
+          date_of_birth: date_of_birth
+          name: name
+          photo: photo
+          biography: biography
+          department: department
+        - place_of_birth: place_of_birth
+          movies:
+          - null
+          - null
+          date_of_death: date_of_death
+          gender: 6
+          date_of_birth: date_of_birth
+          name: name
+          photo: photo
+          biography: biography
+          department: department
+        total_results: 1
+    FavouriteMovie:
+      type: object
+      properties:
+        movie_id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        poster_path:
+          type: string
+  requestBodies:
+    Register:
+      description: Object required to send when registering new user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Register'
+      required: true
+    Login:
+      description: Object required to send when logging in
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Login'
+      required: true
+    FavouriteMovie:
+      description: Object required to send in order to add a new movie to the favourite
+        movies playlist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FavouriteMovie'
+      required: true
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
