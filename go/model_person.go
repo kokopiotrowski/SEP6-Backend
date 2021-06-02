@@ -9,13 +9,22 @@
 package swagger
 
 type Person struct {
+
 	Name string `json:"name,omitempty"`
+
 	PlaceOfBirth string `json:"place_of_birth,omitempty"`
+
 	DateOfBirth string `json:"date_of_birth,omitempty"`
+
 	DateOfDeath string `json:"date_of_death,omitempty"`
+
 	Biography string `json:"biography,omitempty"`
+
 	Photo string `json:"photo,omitempty"`
+
 	Gender int32 `json:"gender,omitempty"`
+
 	Department string `json:"department,omitempty"`
+
 	Movies []Movie `json:"movies,omitempty"`
 }

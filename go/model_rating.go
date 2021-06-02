@@ -8,8 +8,11 @@
  */
 package swagger
 
-type FavouriteMovie struct {
+type Rating struct {
+
 	MovieId int64 `json:"movie_id,omitempty"`
-	Title string `json:"title,omitempty"`
-	PosterPath string `json:"poster_path,omitempty"`
+
+	Rating *interface{} `json:"rating,omitempty"`
+
+	Votes int64 `json:"votes,omitempty"`
 }

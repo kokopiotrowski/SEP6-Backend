@@ -30,6 +30,9 @@ paths:
       responses:
         "200":
           description: Succesful operation
+          headers:
+            X-Auth-Token:
+              $ref: '#/components/securitySchemes/BearerAuth'
         "500":
           description: Internal server error
   /user/playlist/addToFavourite:

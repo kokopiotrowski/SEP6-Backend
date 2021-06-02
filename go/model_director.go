@@ -8,9 +8,9 @@
  */
 package swagger
 
-type ReturnPeople struct {
-	Page int64 `json:"page,omitempty"`
-	TotalPages int64 `json:"total_pages,omitempty"`
-	TotalResults int64 `json:"total_results,omitempty"`
-	People []Person `json:"people,omitempty"`
+type Director struct {
+
+	MovieId int64 `json:"movie_id,omitempty"`
+
+	Person *Person `json:"person,omitempty"`
 }

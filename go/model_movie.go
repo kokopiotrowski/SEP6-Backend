@@ -9,11 +9,18 @@
 package swagger
 
 type Movie struct {
+
 	Id int64 `json:"id,omitempty"`
+
 	PosterPath string `json:"poster_path,omitempty"`
+
 	Title string `json:"title,omitempty"`
+
 	Cast []Person `json:"cast,omitempty"`
+
 	VoteAverage float64 `json:"vote_average,omitempty"`
+
 	VoteCount int32 `json:"vote_count,omitempty"`
+
 	SimilarMovies []Movie `json:"similar_movies,omitempty"`
 }
