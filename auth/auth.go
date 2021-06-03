@@ -19,29 +19,28 @@ func hashPassword(password string) (string, error) {
 
 func RegisterUser(db *sql.DB, register swagger.Register) (bool, error) {
 
-	var validUsername = regexp.MustCompile(`^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$`)
-	var validPassword = regexp.MustCompile(`^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$`)
+	var validUsername = regexp.MustCompile("^[a-zA-Z0-9]*[-]?[a-zA-Z0-9]*$")
 
 	if !validUsername.MatchString(register.Username) {
 		return false, errors.New("Invalid username. Should contain 5-20 characters")
-	}
-
-	if !validPassword.MatchString(register.Password) {
-		return false, errors.New("Invalid password. Should contain at least 6 characters. At least one number and one letter")
 	}
 
 	hashedPass, err := hashPassword(register.Password)
 
 	query := "INSERT INTO Users(Username, Pass) VALUES (?, ?)"
 
-	stmt, err := db.Prepare(query)
+	tx, err := db.Begin()
 
 	if err != nil {
 		return false, err
 	}
 
-	_, err = stmt.Exec(register.Username, hashedPass)
+	_, err = tx.Exec(query, register.Username, hashedPass)
 
+	if err != nil {
+		return false, err
+	}
+	tx.Commit()
 	if err != nil {
 		return false, err
 	}
