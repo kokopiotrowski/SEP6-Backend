@@ -13,6 +13,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	VERKEY = "jdnfksdmfksd"
+)
+
 type Token struct {
 	Token string `json:"token"`
 }
@@ -96,7 +100,7 @@ func CreateToken(userId uint64, username string) (string, error) {
 
 	atClaims["exp"] = time.Now().Add(time.Minute * 300).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-	token, err := at.SignedString([]byte("jdnfksdmfksd"))
+	token, err := at.SignedString([]byte(VERKEY))
 	if err != nil {
 		return "", err
 	}
@@ -121,7 +125,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte("jdnfksdmfksd"), nil
+		return []byte(VERKEY), nil
 	})
 	if err != nil {
 		return nil, err
@@ -133,4 +137,17 @@ func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("x-auth-token")
 	//normally Authorization the_token_xxx
 	return bearToken
+}
+
+func GetUserIdFromToken(r *http.Request) (int64, error) {
+	tokenString := ExtractToken(r)
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(VERKEY), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return int64(claims["user_id"].(float64)), nil
 }

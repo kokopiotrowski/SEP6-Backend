@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"studies/SEP6-Backend/db"
 	"studies/SEP6-Backend/swagger"
 
 	"github.com/rs/cors"
@@ -20,6 +21,11 @@ import (
 func main() {
 	log.Printf("Server started")
 
+	_, err := db.GetDB()
+	if err != nil {
+		log.Fatal("Failed to connect to DB")
+		os.Exit(1)
+	}
 	router := swagger.NewRouter()
 
 	port := os.Getenv("PORT")

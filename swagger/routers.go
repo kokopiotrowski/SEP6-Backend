@@ -133,27 +133,6 @@ var routes = Routes{
 	},
 
 	Route{
-		"UserPlaylistAddToFavouritePost",
-		strings.ToUpper("Post"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/user/playlist/addToFavourite",
-		UserPlaylistAddToFavouritePost,
-	},
-
-	Route{
-		"UserPlaylistGetFavouriteGet",
-		strings.ToUpper("Get"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/user/playlist/getFavourite",
-		UserPlaylistGetFavouriteGet,
-	},
-
-	Route{
-		"UserPlaylistRemoveFromFavouriteMovieIdDelete",
-		strings.ToUpper("Delete"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/user/playlist/removeFromFavourite/{movieId}",
-		UserPlaylistRemoveFromFavouriteMovieIdDelete,
-	},
-
-	Route{
 		"UserRegisterPost",
 		strings.ToUpper("Post"),
 		"/k0k0piotrowski/SEP6-Backend/1.0/user/register",

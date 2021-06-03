@@ -41,8 +41,21 @@ func UserPlaylistAddToFavouritePost(w http.ResponseWriter, r *http.Request) {
 		util.RespondWithJSON(w, r, http.StatusUnauthorized, "Unauthenticated", err)
 		return
 	}
+	userId, err := auth.GetUserIdFromToken(r)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, "Could not retrieve user id from token", err)
+		return
+	}
+	var fm swagger.FavouriteMovie
+	if util.DecodeBodyAsJSON(w, r, &fm) {
+		err = db.AddFavouriteMovie(userId, fm.MovieId, fm.Title, fm.PosterPath)
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, "Adding favourite movie to users list failed", err)
+			return
+		}
 
-	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - add to favourite", nil)
+		util.RespondWithJSON(w, r, http.StatusOK, "Movie added to favourites", nil)
+	}
 }
 
 func UserPlaylistGetFavouriteGet(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +64,19 @@ func UserPlaylistGetFavouriteGet(w http.ResponseWriter, r *http.Request) {
 		util.RespondWithJSON(w, r, http.StatusUnauthorized, "Unauthenticated", err)
 		return
 	}
-	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - get favourite", nil)
+	userId, err := auth.GetUserIdFromToken(r)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, "Could not retrieve user id from token", err)
+		return
+	}
+
+	movies, err := db.GetFavouriteMovies(userId)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, "Could not retrieve list of favourite movies", err)
+		return
+	}
+
+	util.RespondWithJSON(w, r, http.StatusOK, movies, nil)
 }
 
 func UserPlaylistRemoveFromFavouriteMovieIdDelete(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +85,20 @@ func UserPlaylistRemoveFromFavouriteMovieIdDelete(w http.ResponseWriter, r *http
 		util.RespondWithJSON(w, r, http.StatusUnauthorized, "Unauthenticated", err)
 		return
 	}
-	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - remove from favourite playlist", nil)
+	userId, err := auth.GetUserIdFromToken(r)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, "Could not retrieve user id from token", err)
+		return
+	}
+	var movieId int64
+	if util.DecodeVarAsInt64(w, r, "movieId", &movieId) {
+		err = db.DeleteFavouriteMovie(userId, movieId)
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, "Removing favourite movie from users list failed", err)
+			return
+		}
+		util.RespondWithJSON(w, r, http.StatusOK, "Movie removed :(", nil)
+	}
 }
 
 func UserRegisterPost(w http.ResponseWriter, r *http.Request) {

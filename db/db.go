@@ -2,9 +2,11 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"os"
+	swagger "studies/SEP6-Backend/swagger/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -48,4 +50,88 @@ func mustGetenv(k string) string {
 		log.Fatalf("Warning: %s environment variable not set.\n", k)
 	}
 	return v
+}
+
+func AddFavouriteMovie(userId int64, movieId int64, title string, poster_path string) error {
+
+	query := "INSERT INTO FavouriteMovies(UserId, MovieId, Title, PosterPath) VALUES (?, ?, ?, ?)"
+
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(query, userId, movieId, title, poster_path)
+
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetFavouriteMovies(userId int64) ([]swagger.FavouriteMovie, error) {
+
+	query := "SELECT FavouriteMovies.MovieId, FavouriteMovies.Title, FavouriteMovies.PosterPath FROM FavouriteMovies WHERE UserId=?"
+
+	tx, err := db.Begin()
+
+	if err != nil {
+		return []swagger.FavouriteMovie{}, err
+	}
+
+	results, err := tx.Query(query, userId)
+
+	if err != nil {
+		return []swagger.FavouriteMovie{}, err
+	}
+	defer tx.Commit()
+	var favouriteMovies []swagger.FavouriteMovie
+	var movieId int64
+	var title string
+	var poster_path string
+
+	for results.Next() {
+		err = results.Scan(&movieId, &title, &poster_path)
+		if err != nil {
+			return []swagger.FavouriteMovie{}, err
+		}
+		fm := swagger.FavouriteMovie{
+			MovieId:    movieId,
+			Title:      title,
+			PosterPath: poster_path,
+		}
+		favouriteMovies = append(favouriteMovies, fm)
+	}
+	return favouriteMovies, nil
+}
+
+func DeleteFavouriteMovie(userId int64, movieId int64) error {
+
+	query := "DELETE FROM FavouriteMovies WHERE UserId=? AND MovieId=?"
+
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	result, err := tx.Exec(query, userId, movieId)
+
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if rowsAffected == 0 {
+		return errors.New("No such movie with this ID to remove from playlist")
+	}
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+	return nil
 }
