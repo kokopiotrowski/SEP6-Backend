@@ -9,6 +9,8 @@
 package swagger
 
 type Person struct {
+	PersonId int64 `json:"id,omitempty"`
+
 	Name string `json:"name,omitempty"`
 
 	PlaceOfBirth string `json:"place_of_birth,omitempty"`
