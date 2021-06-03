@@ -62,8 +62,8 @@ func PersonPersonIdGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func PersonPopularGet(w http.ResponseWriter, r *http.Request) {
-	q := r.URL.Query()
 
+	q := r.URL.Query()
 	page, present := q["page"]
 	if !present || len(page) == 0 {
 		page = []string{"1"}
