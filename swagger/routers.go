@@ -86,7 +86,7 @@ var routes = Routes{
 	Route{
 		"PersonGet",
 		strings.ToUpper("Get"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/person",
+		"/k0k0piotrowski/SEP6-Backend/1.0/people",
 		PersonGet,
 	},
 
@@ -100,7 +100,7 @@ var routes = Routes{
 	Route{
 		"PersonPopularGet",
 		strings.ToUpper("Get"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/person/popular",
+		"/k0k0piotrowski/SEP6-Backend/1.0/people/popular",
 		PersonPopularGet,
 	},
 
