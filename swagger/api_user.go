@@ -10,13 +10,18 @@ package swagger
 
 import (
 	"net/http"
+	"studies/SEP6-Backend/auth"
+	"studies/SEP6-Backend/db"
+	"studies/SEP6-Backend/reserr"
 	swagger "studies/SEP6-Backend/swagger/models"
 	"studies/SEP6-Backend/util"
 )
 
 func UserLoginPost(w http.ResponseWriter, r *http.Request) {
-
-	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - login", nil)
+	var loginInput swagger.Login
+	if util.DecodeBodyAsJSON(w, r, &loginInput) {
+		util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - login", nil)
+	}
 }
 
 func UserPlaylistAddToFavouritePost(w http.ResponseWriter, r *http.Request) {
@@ -33,12 +38,19 @@ func UserPlaylistRemoveFromFavouriteMovieIdDelete(w http.ResponseWriter, r *http
 }
 
 func UserRegisterPost(w http.ResponseWriter, r *http.Request) {
-
 	var register swagger.Register
-
 	if util.DecodeBodyAsJSON(w, r, &register) {
-
-		util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - register", nil)
+		db, err := db.GetDB()
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, reserr.Internal("DB retrieve error", err, "could not access database"))
+			return
+		}
+		_, err = auth.RegisterUser(db, register)
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, reserr.Internal("Registering failed ", err, ""))
+			return
+		}
+		util.RespondWithJSON(w, r, http.StatusOK, "User registered", nil)
 	}
 
 }
