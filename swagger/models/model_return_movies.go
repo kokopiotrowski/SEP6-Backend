@@ -15,5 +15,5 @@ type ReturnMovies struct {
 
 	TotalResults int64 `json:"total_results,omitempty"`
 
-	Movies []Movie `json:"people,omitempty"`
+	Movies []Movie `json:"results,omitempty"`
 }

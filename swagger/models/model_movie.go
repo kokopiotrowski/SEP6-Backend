@@ -21,5 +21,7 @@ type Movie struct {
 
 	VoteCount int32 `json:"vote_count,omitempty"`
 
+	Overview string `json:"overview,omitempty"`
+
 	SimilarMovies []Movie `json:"similar_movies,omitempty"`
 }

@@ -58,7 +58,7 @@ var routes = Routes{
 	Route{
 		"MovieGet",
 		strings.ToUpper("Get"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/movie",
+		"/k0k0piotrowski/SEP6-Backend/1.0/movies",
 		MovieGet,
 	},
 
@@ -72,14 +72,14 @@ var routes = Routes{
 	Route{
 		"MoviePopularGet",
 		strings.ToUpper("Get"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/movie/popular",
+		"/k0k0piotrowski/SEP6-Backend/1.0/movies/popular",
 		MoviePopularGet,
 	},
 
 	Route{
 		"MovieTopGet",
 		strings.ToUpper("Get"),
-		"/k0k0piotrowski/SEP6-Backend/1.0/movie/top",
+		"/k0k0piotrowski/SEP6-Backend/1.0/movies/top",
 		MovieTopGet,
 	},
 

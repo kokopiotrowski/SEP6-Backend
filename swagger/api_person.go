@@ -9,7 +9,12 @@
 package swagger
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
+	"strings"
+	"studies/SEP6-Backend/moviesdb"
+	"studies/SEP6-Backend/util"
 )
 
 func PersonGet(w http.ResponseWriter, r *http.Request) {
@@ -18,10 +23,44 @@ func PersonGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func PersonPersonIdGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	q := r.URL.Query()
+	var personId int64
+
+	if util.DecodeVarAsInt64(w, r, "personId", &personId) {
+
+		language, present := q["language"]
+		if !present || len(language) == 0 {
+			language = []string{""}
+		}
+		receivedPerson, err := moviesdb.PersonPersonIdGet(strings.Join(language, ""), personId)
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to get person"))
+			return
+		}
+		util.RespondWithJSON(w, r, http.StatusOK, receivedPerson, nil)
+	}
 }
 
 func PersonPopularGet(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
 
+	page, present := q["page"]
+	if !present || len(page) == 0 {
+		page = []string{"1"}
+	}
+	pageParsed, err := strconv.ParseInt(strings.Join(page, ""), 10, 64)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to parse pagination"))
+		return
+	}
+	language, present := q["language"]
+	if !present || len(language) == 0 {
+		language = []string{""}
+	}
+	popularPeople, err := moviesdb.PersonPopularGet("", strings.Join(language, ""), pageParsed)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for movies"))
+		return
+	}
+	util.RespondWithJSON(w, r, http.StatusOK, popularPeople, nil)
 }

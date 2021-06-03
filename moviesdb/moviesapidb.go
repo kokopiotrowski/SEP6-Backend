@@ -17,7 +17,7 @@ func MoviesGetPopular(region string, language string, page int64) (swagger.Retur
 
 	var returnMovies swagger.ReturnMovies
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	if len(region) > 0 {
@@ -38,7 +38,7 @@ func MovieSearch(query string, page int64) (swagger.ReturnMovies, error) {
 
 	var returnMovies swagger.ReturnMovies
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	params["query"] = query
@@ -54,7 +54,7 @@ func MovieSearch(query string, page int64) (swagger.ReturnMovies, error) {
 func MovieMovieIdGet(language string, movieId int64) (swagger.Movie, error) {
 
 	var returnMovie swagger.Movie
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	if len(language) > 0 {
@@ -72,7 +72,7 @@ func MovieTopGet(region string, language string, page int64) (swagger.ReturnMovi
 
 	var returnMovies swagger.ReturnMovies
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	if len(region) > 0 {

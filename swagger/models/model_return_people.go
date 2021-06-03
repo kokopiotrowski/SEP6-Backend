@@ -15,5 +15,5 @@ type ReturnPeople struct {
 
 	TotalResults int64 `json:"total_results,omitempty"`
 
-	People []Person `json:"people,omitempty"`
+	People []Person `json:"results,omitempty"`
 }
