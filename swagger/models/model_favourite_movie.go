@@ -9,7 +9,6 @@
 package swagger
 
 type FavouriteMovie struct {
-
 	MovieId int64 `json:"movie_id,omitempty"`
 
 	Title string `json:"title,omitempty"`

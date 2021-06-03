@@ -9,7 +9,6 @@
 package swagger
 
 type Movie struct {
-
 	Id int64 `json:"id,omitempty"`
 
 	PosterPath string `json:"poster_path,omitempty"`

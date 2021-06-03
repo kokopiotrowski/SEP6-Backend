@@ -9,7 +9,6 @@
 package swagger
 
 type Rating struct {
-
 	MovieId int64 `json:"movie_id,omitempty"`
 
 	Rating *interface{} `json:"rating,omitempty"`

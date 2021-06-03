@@ -64,10 +64,6 @@ func Forbidden(name string, err error, message string) error {
 	return &httpError{http.StatusForbidden, name, err, message}
 }
 
-func Unsubscribed(name string, err error, message string) error {
-	return &httpError{http.StatusPaymentRequired, name, err, message}
-}
-
 func Internal(name string, err error, message string) error {
 	return &httpError{http.StatusInternalServerError, name, err, message}
 }

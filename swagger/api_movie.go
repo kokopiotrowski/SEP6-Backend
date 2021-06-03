@@ -10,24 +10,72 @@ package swagger
 
 import (
 	"net/http"
+	swagger "studies/SEP6-Backend/swagger/models"
+	"studies/SEP6-Backend/util"
+)
+
+var (
+	dummyMovies swagger.ReturnMovies = swagger.ReturnMovies{
+		Page:         1,
+		TotalPages:   3,
+		TotalResults: 4,
+		Movies: []swagger.Movie{
+			{
+				Id:            1,
+				PosterPath:    "jakiś tam path",
+				Title:         "Wariat",
+				Cast:          []swagger.Person{},
+				VoteAverage:   1.2,
+				VoteCount:     3,
+				SimilarMovies: []swagger.Movie{},
+			},
+			{
+				Id:            2,
+				PosterPath:    "jakiś tam path numer 2",
+				Title:         "Elo",
+				Cast:          []swagger.Person{},
+				VoteAverage:   1.2,
+				VoteCount:     2,
+				SimilarMovies: []swagger.Movie{},
+			},
+			{
+				Id:            3,
+				PosterPath:    "jakiś tam path sadasd21",
+				Title:         "Siema",
+				Cast:          []swagger.Person{},
+				VoteAverage:   1.2,
+				VoteCount:     5,
+				SimilarMovies: []swagger.Movie{},
+			},
+			{
+				Id:            4,
+				PosterPath:    "jakiś tam path sadasd1212312312312312312",
+				Title:         "hmmmm",
+				Cast:          []swagger.Person{},
+				VoteAverage:   2.3,
+				VoteCount:     4,
+				SimilarMovies: []swagger.Movie{},
+			},
+		},
+	}
 )
 
 func MovieGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies, nil)
 }
 
 func MovieMovieIdGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies.Movies[2], nil)
 }
 
 func MoviePopularGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies.Movies, nil)
 }
 
 func MovieTopGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies, nil)
 }

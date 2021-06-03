@@ -9,12 +9,11 @@
 package swagger
 
 type ReturnMovies struct {
-
 	Page int64 `json:"page,omitempty"`
 
 	TotalPages int64 `json:"total_pages,omitempty"`
 
 	TotalResults int64 `json:"total_results,omitempty"`
 
-	People []Movie `json:"people,omitempty"`
+	Movies []Movie `json:"people,omitempty"`
 }

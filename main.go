@@ -11,6 +11,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"studies/SEP6-Backend/swagger"
 )
 
@@ -19,5 +20,11 @@ func main() {
 
 	router := swagger.NewRouter()
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("defaulting to port %s", port)
+	}
+
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

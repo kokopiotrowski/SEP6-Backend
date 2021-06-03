@@ -9,7 +9,6 @@
 package swagger
 
 type Director struct {
-
 	MovieId int64 `json:"movie_id,omitempty"`
 
 	Person *Person `json:"person,omitempty"`

@@ -9,7 +9,6 @@
 package swagger
 
 type ReturnPeople struct {
-
 	Page int64 `json:"page,omitempty"`
 
 	TotalPages int64 `json:"total_pages,omitempty"`

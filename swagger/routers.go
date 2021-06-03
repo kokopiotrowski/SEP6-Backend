@@ -9,9 +9,9 @@
 package swagger
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
+	"studies/SEP6-Backend/util"
 
 	"github.com/gorilla/mux"
 )
@@ -43,7 +43,8 @@ func NewRouter() *mux.Router {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+
+	util.RespondWithJSON(w, r, http.StatusOK, "Hello, this is index page of SEP6 backend app. Try out pinging endpoints ", nil)
 }
 
 var routes = Routes{

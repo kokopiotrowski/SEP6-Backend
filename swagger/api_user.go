@@ -10,29 +10,35 @@ package swagger
 
 import (
 	"net/http"
+	swagger "studies/SEP6-Backend/swagger/models"
+	"studies/SEP6-Backend/util"
 )
 
 func UserLoginPost(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - login", nil)
 }
 
 func UserPlaylistAddToFavouritePost(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - add to favourite", nil)
 }
 
 func UserPlaylistGetFavouriteGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - get favourite", nil)
 }
 
 func UserPlaylistRemoveFromFavouriteMovieIdDelete(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - remove from favourite playlist", nil)
 }
 
 func UserRegisterPost(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	var register swagger.Register
+
+	if util.DecodeBodyAsJSON(w, r, &register) {
+
+		util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - register", nil)
+	}
+
 }
