@@ -1,0 +1,5 @@
+package moviesdb
+
+const (
+	baseMovieDbURL = ""
+)

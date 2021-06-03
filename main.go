@@ -13,6 +13,8 @@ import (
 	"net/http"
 	"os"
 	"studies/SEP6-Backend/swagger"
+
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -26,5 +28,7 @@ func main() {
 		log.Printf("defaulting to port %s", port)
 	}
 
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	handler := cors.AllowAll().Handler(router)
+
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }

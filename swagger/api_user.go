@@ -20,20 +20,46 @@ import (
 func UserLoginPost(w http.ResponseWriter, r *http.Request) {
 	var loginInput swagger.Login
 	if util.DecodeBodyAsJSON(w, r, &loginInput) {
-		util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - login", nil)
+		db, err := db.GetDB()
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, reserr.Internal("DB retrieve error", err, "could not access database"))
+			return
+		}
+		token, err := auth.LogIn(db, loginInput)
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, reserr.Internal("Error with generating token ", err, ""))
+			return
+		}
+
+		util.RespondWithJSON(w, r, http.StatusOK, token, nil)
 	}
 }
 
 func UserPlaylistAddToFavouritePost(w http.ResponseWriter, r *http.Request) {
+	err := auth.TokenValid(r)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusUnauthorized, "Unauthenticated", err)
+		return
+	}
 
 	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - add to favourite", nil)
 }
 
 func UserPlaylistGetFavouriteGet(w http.ResponseWriter, r *http.Request) {
+	err := auth.TokenValid(r)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusUnauthorized, "Unauthenticated", err)
+		return
+	}
 	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - get favourite", nil)
 }
 
 func UserPlaylistRemoveFromFavouriteMovieIdDelete(w http.ResponseWriter, r *http.Request) {
+	err := auth.TokenValid(r)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusUnauthorized, "Unauthenticated", err)
+		return
+	}
 	util.RespondWithJSON(w, r, http.StatusOK, "Dummy response - remove from favourite playlist", nil)
 }
 

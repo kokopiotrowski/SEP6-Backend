@@ -1,13 +1,22 @@
-steps:
-# Build the container image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/forward-aura-310706/backend', '.']
-# Push the container image to Container Registry
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/forward-aura-310706/backend']
-# Deploy container image to Cloud Run
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args: ['run', 'deploy', 'backend', '--image', 'gcr.io/forward-aura-310706/backend', '--region', 'REGION', '--platform', 'managed']
-images:
-- gcr.io/forward-aura-310706/backend
+ steps:
+ # Build the container image
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '-t', 'gcr.io/$PROJECT_ID/backend:$COMMIT_SHA', '.']
+ # Push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'gcr.io/$PROJECT_ID/backend:$COMMIT_SHA']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+   entrypoint: gcloud
+   args:
+   - 'run'
+   - 'deploy'
+   - 'backend'
+   - '--image'
+   - 'gcr.io/$PROJECT_ID/backend:$COMMIT_SHA'
+   - '--region'
+   - 'europe-central2'
+   - '--platform'
+   - 'managed'
+ images:
+ - 'gcr.io/$PROJECT_ID/backend:$COMMIT_SHA'
