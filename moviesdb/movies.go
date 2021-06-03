@@ -18,7 +18,7 @@ func GetCastForMovie(movieId int64) (Cast, error) {
 
 	var cast Cast
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	code, _, err := util.SendRequest("GET", baseMovieDbURL, movieCastURL+strconv.FormatInt(movieId, 10)+"/credits", params, nil, nil, nil, &cast)
@@ -33,7 +33,7 @@ func GetSimilarMovies(movieId int64) (swagger.ReturnMovies, error) {
 
 	var similarMovies swagger.ReturnMovies
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	code, _, err := util.SendRequest("GET", baseMovieDbURL, movieCastURL+strconv.FormatInt(movieId, 10)+"/similar", params, nil, nil, nil, &similarMovies)

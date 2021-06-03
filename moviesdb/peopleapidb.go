@@ -15,7 +15,7 @@ const (
 func PersonGet(query string, page int64) (swagger.ReturnPeople, error) {
 	var returnPeople swagger.ReturnPeople
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	params["query"] = query
@@ -30,7 +30,7 @@ func PersonGet(query string, page int64) (swagger.ReturnPeople, error) {
 
 func PersonPersonIdGet(language string, personId int64) (swagger.Person, error) {
 	var returnPerson swagger.Person
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	if len(language) > 0 {
@@ -47,7 +47,7 @@ func PersonPersonIdGet(language string, personId int64) (swagger.Person, error) 
 func PersonPopularGet(region string, language string, page int64) (swagger.ReturnPeople, error) {
 	var returnPeople swagger.ReturnPeople
 
-	var params map[string]string
+	params := make(map[string]string)
 
 	params["api_key"] = movieDbAPIKey
 	if len(region) > 0 {
