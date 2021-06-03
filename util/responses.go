@@ -245,7 +245,7 @@ func SendRequest(method, address, endPoint string, params map[string]string, hea
 		u.RawQuery = uParams.Encode()
 	}
 
-	log.Println("sending request %s %s", method, u.String())
+	fmt.Printf("sending request %s %s", method, u.String())
 
 	request, err := http.NewRequest(method, u.String(), body)
 	if err != nil {
@@ -268,7 +268,7 @@ func SendRequest(method, address, endPoint string, params map[string]string, hea
 	}
 	defer response.Body.Close()
 
-	log.Println("received response status code %d", response.StatusCode)
+	fmt.Printf("received response status code %d", response.StatusCode)
 
 	if response.StatusCode != http.StatusOK && response.StatusCode != http.StatusCreated {
 		errorMessage, err := ioutil.ReadAll(response.Body)
