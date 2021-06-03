@@ -18,8 +18,28 @@ import (
 )
 
 func PersonGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	q := r.URL.Query()
+	search, present := q["search"]
+	if !present || len(search) == 0 {
+		search = []string{""}
+	}
+
+	page, present := q["page"]
+	if !present || len(page) == 0 {
+		page = []string{"1"}
+	}
+
+	pageParsed, err := strconv.ParseInt(page[0], 10, 64)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to parse pagination"))
+		return
+	}
+	searchedMovies, err := moviesdb.MovieSearch(search[0], pageParsed)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for people"))
+		return
+	}
+	util.RespondWithJSON(w, r, http.StatusOK, searchedMovies, nil)
 }
 
 func PersonPersonIdGet(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +79,7 @@ func PersonPopularGet(w http.ResponseWriter, r *http.Request) {
 	}
 	popularPeople, err := moviesdb.PersonPopularGet("", strings.Join(language, ""), pageParsed)
 	if err != nil {
-		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for movies"))
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to get popular people"))
 		return
 	}
 	util.RespondWithJSON(w, r, http.StatusOK, popularPeople, nil)
