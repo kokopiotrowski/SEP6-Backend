@@ -13,17 +13,17 @@ type Person struct {
 
 	PlaceOfBirth string `json:"place_of_birth,omitempty"`
 
-	DateOfBirth string `json:"date_of_birth,omitempty"`
+	DateOfBirth string `json:"birthday,omitempty"`
 
 	DateOfDeath string `json:"date_of_death,omitempty"`
 
 	Biography string `json:"biography,omitempty"`
 
-	Photo string `json:"photo,omitempty"`
+	Photo string `json:"profile_path,omitempty"`
 
 	Gender int32 `json:"gender,omitempty"`
 
-	Department string `json:"department,omitempty"`
+	Department string `json:"known_for_department,omitempty"`
 
 	Movies []Movie `json:"movies,omitempty"`
 }

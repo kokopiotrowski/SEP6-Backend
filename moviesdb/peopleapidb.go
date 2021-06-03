@@ -1,18 +1,65 @@
 package moviesdb
 
-import swagger "studies/SEP6-Backend/swagger/models"
+import (
+	"strconv"
+	swagger "studies/SEP6-Backend/swagger/models"
+	"studies/SEP6-Backend/util"
+)
 
-func PersonGet() (swagger.ReturnPeople, error) {
+const (
+	peopleGetByIdURL    = "/person/"
+	peoplePopularGetURL = "/person/popular"
+	peopleSearchURL     = "/search/person"
+)
 
-	return swagger.ReturnPeople{}, nil
+func PersonGet(query string, page int64) (swagger.ReturnPeople, error) {
+	var returnPeople swagger.ReturnPeople
+
+	var params map[string]string
+
+	params["api_key"] = movieDbAPIKey
+	params["query"] = query
+	params["page"] = strconv.FormatInt(page, 10)
+	code, _, err := util.SendRequest("GET", baseMovieDbURL, peopleSearchURL, params, nil, nil, nil, &returnPeople)
+	if err != nil || code != 200 {
+		return swagger.ReturnPeople{}, err
+	}
+
+	return returnPeople, nil
 }
 
-func PersonPersonIdGet() (swagger.Person, error) {
+func PersonPersonIdGet(language string, personId int64) (swagger.Person, error) {
+	var returnPerson swagger.Person
+	var params map[string]string
 
-	return swagger.Person{}, nil
+	params["api_key"] = movieDbAPIKey
+	if len(language) > 0 {
+		params["language"] = language
+	}
+	code, _, err := util.SendRequest("GET", baseMovieDbURL, peopleGetByIdURL+strconv.FormatInt(personId, 10), params, nil, nil, nil, &returnPerson)
+	if err != nil || code != 200 {
+		return swagger.Person{}, err
+	}
+
+	return returnPerson, nil
 }
 
-func PersonPopularGet() ([]swagger.Person, error) {
+func PersonPopularGet(region string, language string, page int64) (swagger.ReturnPeople, error) {
+	var returnPeople swagger.ReturnPeople
 
-	return nil, nil
+	var params map[string]string
+
+	params["api_key"] = movieDbAPIKey
+	if len(region) > 0 {
+		params["region"] = region
+	}
+	if len(language) > 0 {
+		params["language"] = language
+	}
+	params["page"] = strconv.FormatInt(page, 10)
+	code, _, err := util.SendRequest("GET", baseMovieDbURL, peoplePopularGetURL, params, nil, nil, nil, &returnPeople)
+	if err != nil || code != 200 {
+		return swagger.ReturnPeople{}, err
+	}
+	return returnPeople, nil
 }

@@ -9,7 +9,11 @@
 package swagger
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
+	"studies/SEP6-Backend/moviesdb"
 	swagger "studies/SEP6-Backend/swagger/models"
 	"studies/SEP6-Backend/util"
 )
@@ -62,20 +66,90 @@ var (
 
 func MovieGet(w http.ResponseWriter, r *http.Request) {
 
-	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies, nil)
+	q := r.URL.Query()
+	search, present := q["search"]
+	if !present || len(search[0]) == 0 {
+		fmt.Println("region is not present")
+	}
+
+	page, present := q["page"]
+	if !present || len(page[0]) == 0 {
+		fmt.Println("page not present")
+	}
+
+	pageParsed, err := strconv.ParseInt(page[0], 10, 64)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to parse pagination"))
+		return
+	}
+	searchedMovies, err := moviesdb.MovieSearch(search[0], pageParsed)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for movies"))
+		return
+	}
+	util.RespondWithJSON(w, r, http.StatusOK, searchedMovies, nil)
 }
 
 func MovieMovieIdGet(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	var movieId int64
 
-	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies.Movies[2], nil)
+	if util.DecodeVarAsInt64(w, r, "movieId", &movieId) {
+
+		language, present := q["language"]
+		if !present || len(language[0]) == 0 {
+			fmt.Println("language not present")
+		}
+		searchedMovies, err := moviesdb.MovieMovieIdGet(language[0], movieId)
+		if err != nil {
+			util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for movies"))
+			return
+		}
+		util.RespondWithJSON(w, r, http.StatusOK, searchedMovies, nil)
+	}
+
 }
 
 func MoviePopularGet(w http.ResponseWriter, r *http.Request) {
 
-	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies.Movies, nil)
+	q := r.URL.Query()
+
+	page, present := q["page"]
+	if !present || len(page[0]) == 0 {
+		fmt.Println("page not present")
+	}
+
+	pageParsed, err := strconv.ParseInt(page[0], 10, 64)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to parse pagination"))
+		return
+	}
+	popularMovies, err := moviesdb.MoviesGetPopular("", "", pageParsed)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for movies"))
+		return
+	}
+	util.RespondWithJSON(w, r, http.StatusOK, popularMovies, nil)
 }
 
 func MovieTopGet(w http.ResponseWriter, r *http.Request) {
 
-	util.RespondWithJSON(w, r, http.StatusOK, dummyMovies, nil)
+	q := r.URL.Query()
+
+	page, present := q["page"]
+	if !present || len(page[0]) == 0 {
+		fmt.Println("page not present")
+	}
+
+	pageParsed, err := strconv.ParseInt(page[0], 10, 64)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to parse pagination"))
+		return
+	}
+	topMovies, err := moviesdb.MovieTopGet("", "", pageParsed)
+	if err != nil {
+		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for movies"))
+		return
+	}
+	util.RespondWithJSON(w, r, http.StatusOK, topMovies, nil)
 }
