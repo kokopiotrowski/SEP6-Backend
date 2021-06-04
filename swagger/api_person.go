@@ -34,7 +34,7 @@ func PersonGet(w http.ResponseWriter, r *http.Request) {
 		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to parse pagination"))
 		return
 	}
-	searchedMovies, err := moviesdb.MovieSearch(search[0], pageParsed)
+	searchedMovies, err := moviesdb.PersonGet(strings.Join(search, ""), pageParsed)
 	if err != nil {
 		util.RespondWithJSON(w, r, http.StatusInternalServerError, nil, errors.New("Failed to search for people"))
 		return

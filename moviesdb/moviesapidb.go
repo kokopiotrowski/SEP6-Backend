@@ -64,11 +64,11 @@ func MovieMovieIdGet(language string, movieId int64) (swagger.Movie, error) {
 	if err != nil || code != 200 {
 		return swagger.Movie{}, err
 	}
-	similarMovies, err := GetSimilarMovies(returnMovie.Id)
+	similarMovies, err := GetSimilarMovies(returnMovie.Id, "")
 	if err != nil {
 		return swagger.Movie{}, err
 	}
-	cast, err := GetCastForMovie(returnMovie.Id)
+	cast, err := GetCastForMovie(returnMovie.Id, "")
 	if err != nil {
 		return swagger.Movie{}, err
 	}
