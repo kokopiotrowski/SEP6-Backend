@@ -16,6 +16,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const (
+	IndexMESSAGE = "Hello, this is index page of SEP6 backend app. Try out pinging endpoints. All documentation for this API available here: https://app.swaggerhub.com/apis-docs/k0k0piotrowski/SEP6-Backend/1.0"
+)
+
 type Route struct {
 	Name        string
 	Method      string
@@ -44,7 +48,7 @@ func NewRouter() *mux.Router {
 
 func Index(w http.ResponseWriter, r *http.Request) {
 
-	util.RespondWithJSON(w, r, http.StatusOK, "Hello, this is index page of SEP6 backend app. Try out pinging endpoints ", nil)
+	util.RespondWithJSON(w, r, http.StatusOK, IndexMESSAGE, nil)
 }
 
 var routes = Routes{
