@@ -65,6 +65,7 @@ func AddFavouriteMovie(userId int64, movieId int64, title string, poster_path st
 	_, err = tx.Exec(query, userId, movieId, title, poster_path)
 
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	err = tx.Commit()
@@ -123,6 +124,7 @@ func DeleteFavouriteMovie(userId int64, movieId int64) error {
 	result, err := tx.Exec(query, userId, movieId)
 
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	rowsAffected, err := result.RowsAffected()
