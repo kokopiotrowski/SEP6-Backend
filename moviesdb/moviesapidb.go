@@ -4,6 +4,7 @@ import (
 	"strconv"
 	swagger "studies/SEP6-Backend/swagger/models"
 	"studies/SEP6-Backend/util"
+	"time"
 )
 
 const (
@@ -64,17 +65,20 @@ func MovieMovieIdGet(language string, movieId int64) (swagger.Movie, error) {
 	if err != nil || code != 200 {
 		return swagger.Movie{}, err
 	}
-	similarMovies, err := GetSimilarMovies(returnMovie.Id, "")
+
+	similarMovies, err := GetSimilarMovies(movieId, "")
 	if err != nil {
 		return swagger.Movie{}, err
 	}
-	cast, err := GetCastForMovie(returnMovie.Id, "")
+	cast, err := GetCastForMovie(movieId, "")
 	if err != nil {
 		return swagger.Movie{}, err
 	}
 
 	returnMovie.Cast = cast.People
 	returnMovie.SimilarMovies = similarMovies.Movies
+
+	time.Sleep(2000)
 
 	return returnMovie, nil
 }

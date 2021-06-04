@@ -4,6 +4,7 @@ import (
 	"strconv"
 	swagger "studies/SEP6-Backend/swagger/models"
 	"studies/SEP6-Backend/util"
+	"time"
 )
 
 const (
@@ -45,8 +46,8 @@ func PersonPersonIdGet(language string, personId int64) (swagger.Person, error) 
 	if err != nil {
 		return swagger.Person{}, err
 	}
-
 	returnPerson.Movies = cast.Movies
+	time.Sleep(2000)
 
 	return returnPerson, nil
 }
